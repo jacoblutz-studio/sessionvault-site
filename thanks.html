@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SessionVault — Download</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #0A0A14; color: #ddd; font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, #00D4AA06 0%, #0A0A14 60%);
+  }
+  .container { text-align: center; padding: 40px 24px; max-width: 500px; }
+  .icon { font-size: 64px; color: #22C55E; margin-bottom: 20px; }
+  .title { font-size: 28px; font-weight: 800; color: #00D4AA; letter-spacing: 2px; margin-bottom: 12px; }
+  .subtitle { font-size: 15px; color: #888; line-height: 1.8; margin-bottom: 32px; }
+  .download-btn {
+    display: inline-block; padding: 18px 48px; background: #00D4AA; color: #0A0A14;
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 800;
+    letter-spacing: 2px; border-radius: 12px; border: none; cursor: pointer;
+    box-shadow: 0 0 30px #00D4AA30; transition: all 0.2s; text-decoration: none;
+  }
+  .download-btn:hover { transform: translateY(-2px); box-shadow: 0 0 50px #00D4AA40; }
+  .note { font-size: 11px; color: #555; margin-top: 20px; line-height: 1.8; }
+  .error { color: #E94560; font-size: 14px; margin-top: 20px; }
+  .loading { color: #00D4AA; font-size: 14px; }
+  .steps { text-align: left; margin: 30px auto; max-width: 380px; }
+  .step {
+    padding: 12px 0; border-bottom: 1px solid #1C1C30; font-size: 13px; color: #999;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .step-num { color: #00D4AA; font-weight: 700; font-size: 11px; width: 24px; text-align: center; }
+  .footer {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid #1C1C30;
+  }
+  .footer-brand { font-size: 9px; color: #555; letter-spacing: 4px; }
+  .footer-ep { font-size: 14px; font-weight: 700; color: #00D4AA; margin-top: 6px; letter-spacing: 1.5px; }
+</style>
+</head>
+<body>
+<div class="container" id="content">
+  <div class="loading">◆ Verifying purchase...</div>
+</div>
+
+<script>
+async function verify() {
+  const container = document.getElementById('content');
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  if (!sessionId) {
+    container.innerHTML = `
+      <div class="icon">◆</div>
+      <div class="title">SESSIONVAULT</div>
+      <div class="error">No purchase detected. Please purchase SessionVault first.</div>
+      <div style="margin-top:20px"><a href="/" style="color:#00D4AA;font-size:13px">← Back to sessionvault.app</a></div>
+    `;
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/verify-purchase?session_id=' + sessionId);
+    const data = await res.json();
+
+    if (data.valid) {
+      container.innerHTML = `
+        <div class="icon">✓</div>
+        <div class="title">YOU'RE IN</div>
+        <div class="subtitle">SessionVault is ready to download. Thank you for your purchase.</div>
+        <a href="${data.downloadUrl}" class="download-btn">▸ DOWNLOAD SESSIONVAULT</a>
+        <div class="steps">
+          <div class="step"><span class="step-num">01</span> Open the downloaded .dmg file</div>
+          <div class="step"><span class="step-num">02</span> Drag SessionVault to Applications</div>
+          <div class="step"><span class="step-num">03</span> Launch and set up your rules</div>
+          <div class="step"><span class="step-num">04</span> Let SessionVault guide you through cleanup</div>
+        </div>
+        <div class="note">
+          Questions? Email <a href="mailto:jacob@jacoblutz.com" style="color:#00D4AA">jacob@jacoblutz.com</a>
+        </div>
+        <div class="footer">
+          <div class="footer-brand">PRESENTED BY</div>
+          <div class="footer-ep">EXECUTIVE PRODUCER</div>
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="icon">◆</div>
+        <div class="title">SESSIONVAULT</div>
+        <div class="error">Could not verify purchase. If you just paid, wait a moment and refresh.</div>
+        <div style="margin-top:20px"><a href="/" style="color:#00D4AA;font-size:13px">← Back to sessionvault.app</a></div>
+      `;
+    }
+  } catch (e) {
+    container.innerHTML = `
+      <div class="icon">◆</div>
+      <div class="title">SESSIONVAULT</div>
+      <div class="error">Verification error. Please try refreshing the page.</div>
+      <div style="margin-top:20px"><a href="/" style="color:#00D4AA;font-size:13px">← Back to sessionvault.app</a></div>
+    `;
+  }
+}
+verify();
+</script>
+</body>
+</html>

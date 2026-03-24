@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SessionVault — Smart File Storage for Music Producers</title>
+<meta name="description" content="Your sessions are a mess. SessionVault cleans them up without losing anything. Auto-archive, trim backups, find duplicates. Built for Pro Tools, Ableton, and Logic.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg: #0A0A14; --surface: #0F0F1C; --card: #141422; --border: #1C1C30;
+    --teal: #00D4AA; --red: #E94560; --green: #22C55E; --yellow: #EAB308;
+    --text: #ddd; --muted: #888; --dim: #555;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; overflow-x: hidden; }
+  a { color: var(--teal); text-decoration: none; }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 60px 24px; position: relative;
+    background: radial-gradient(ellipse at 50% 0%, #00D4AA08 0%, transparent 60%);
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 60px, #ffffff02 60px, #ffffff02 61px);
+    pointer-events: none;
+  }
+  .hero-badge {
+    font-size: 11px; letter-spacing: 6px; color: var(--teal); opacity: 0.6;
+    margin-bottom: 24px; text-transform: uppercase;
+    animation: fadeDown 0.8s ease both;
+  }
+  .hero-icon {
+    font-size: 64px; color: var(--teal); margin-bottom: 20px;
+    text-shadow: 0 0 40px #00D4AA40, 0 0 80px #00D4AA20;
+    animation: fadeDown 0.8s ease 0.1s both;
+  }
+  .hero-title {
+    font-size: clamp(28px, 5vw, 48px); font-weight: 800; letter-spacing: 3px;
+    color: var(--teal); margin-bottom: 20px;
+    text-shadow: 0 0 30px #00D4AA30;
+    animation: fadeDown 0.8s ease 0.2s both;
+  }
+  .hero-sub {
+    font-size: clamp(14px, 2.5vw, 20px); color: var(--text); font-weight: 600;
+    max-width: 600px; line-height: 1.8; margin-bottom: 12px;
+    animation: fadeDown 0.8s ease 0.3s both;
+  }
+  .hero-desc {
+    font-size: clamp(12px, 1.8vw, 15px); color: var(--muted); max-width: 520px;
+    line-height: 1.9; margin-bottom: 40px;
+    animation: fadeDown 0.8s ease 0.4s both;
+  }
+  .hero-cta {
+    display: inline-block; padding: 18px 48px; background: var(--teal); color: var(--bg);
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 800;
+    letter-spacing: 2px; border-radius: 12px; transition: all 0.2s;
+    box-shadow: 0 0 30px #00D4AA30, 0 4px 20px #00000040;
+    animation: fadeDown 0.8s ease 0.5s both;
+  }
+  .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 0 50px #00D4AA40, 0 8px 30px #00000050; }
+  .hero-price {
+    margin-top: 16px; font-size: 13px; color: var(--dim);
+    animation: fadeDown 0.8s ease 0.6s both;
+  }
+  .hero-price span { color: var(--teal); font-weight: 700; }
+
+  /* ─── Problem ─── */
+  .section { padding: 80px 24px; max-width: 700px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; letter-spacing: 6px; color: var(--teal); opacity: 0.5;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: clamp(20px, 3.5vw, 32px); font-weight: 800; color: var(--text);
+    margin-bottom: 16px; line-height: 1.4;
+  }
+  .section-text {
+    font-size: 14px; color: var(--muted); line-height: 2; margin-bottom: 20px;
+  }
+
+  /* ─── Story ─── */
+  .story {
+    padding: 40px 0; border-left: 2px solid var(--border); margin-left: 12px;
+  }
+  .story-step {
+    padding: 0 0 32px 28px; position: relative;
+  }
+  .story-step::before {
+    content: ''; position: absolute; left: -6px; top: 6px;
+    width: 10px; height: 10px; border-radius: 50%; background: var(--border);
+  }
+  .story-step.bad::before { background: var(--red); box-shadow: 0 0 8px #E9456040; }
+  .story-step.good::before { background: var(--teal); box-shadow: 0 0 8px #00D4AA40; }
+  .story-num { font-size: 11px; color: var(--dim); letter-spacing: 3px; margin-bottom: 6px; }
+  .story-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .story-desc { font-size: 12px; color: var(--muted); line-height: 1.8; }
+
+  /* ─── Features ─── */
+  .features { display: grid; gap: 12px; margin: 40px 0; }
+  .feature-card {
+    padding: 24px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--card); transition: border-color 0.3s;
+  }
+  .feature-card:hover { border-color: #00D4AA30; }
+  .feature-icon { font-size: 24px; margin-bottom: 12px; }
+  .feature-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .feature-desc { font-size: 12px; color: var(--muted); line-height: 1.8; }
+
+  /* ─── DAW Support ─── */
+  .daws {
+    display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0;
+  }
+  .daw-badge {
+    padding: 10px 20px; border-radius: 8px; background: var(--card);
+    border: 1px solid var(--border); font-size: 13px; font-weight: 600;
+  }
+  .daw-badge.pt { color: #3B82F6; border-color: #3B82F620; }
+  .daw-badge.ab { color: #F59E0B; border-color: #F59E0B20; }
+  .daw-badge.lp { color: #8B5CF6; border-color: #8B5CF620; }
+
+  /* ─── Safety ─── */
+  .safety-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 24px 0; }
+  .safety-item {
+    padding: 16px; border-radius: 10px; background: var(--card); border: 1px solid var(--border);
+  }
+  .safety-icon { font-size: 18px; margin-bottom: 8px; }
+  .safety-label { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .safety-desc { font-size: 11px; color: var(--dim); line-height: 1.6; }
+
+  /* ─── Pricing ─── */
+  .pricing {
+    padding: 80px 24px; text-align: center;
+    background: radial-gradient(ellipse at 50% 100%, #00D4AA06 0%, transparent 60%);
+  }
+  .price-card {
+    flex: 1; min-width: 260px; padding: 32px 24px; border-radius: 16px;
+    border: 2px solid var(--border); background: var(--card);
+    display: flex; flex-direction: column;
+  }
+  .price-card.featured {
+    border-color: #00D4AA40;
+    box-shadow: 0 0 60px #00D4AA08;
+    position: relative;
+  }
+  .price-tag {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--teal); color: var(--bg); font-size: 9px; font-weight: 800;
+    letter-spacing: 2px; padding: 4px 14px; border-radius: 20px;
+  }
+  .price-tier { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: 2px; margin-bottom: 12px; }
+  .price-amount {
+    font-size: 42px; font-weight: 800; color: var(--teal);
+    text-shadow: 0 0 20px #00D4AA30;
+  }
+  .price-period { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .price-features { text-align: left; margin: 20px 0; flex: 1; }
+  .price-features li {
+    list-style: none; padding: 7px 0; font-size: 12px; color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  .price-features li::before { content: '◆ '; color: var(--teal); }
+  .price-features li.highlight { color: var(--teal); font-weight: 600; }
+  .price-btn {
+    display: block; width: 100%; padding: 16px; background: var(--teal); color: var(--bg);
+    font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 800;
+    letter-spacing: 2px; border: none; border-radius: 12px; cursor: pointer;
+    margin-top: auto; transition: all 0.2s;
+    box-shadow: 0 0 20px #00D4AA25;
+  }
+  .price-btn:hover { transform: translateY(-2px); box-shadow: 0 0 40px #00D4AA35; }
+  .price-btn.secondary {
+    background: transparent; border: 2px solid var(--teal); color: var(--teal);
+    box-shadow: none;
+  }
+  .price-btn.secondary:hover { background: #00D4AA10; box-shadow: none; }
+  .price-grid { display: flex; gap: 16px; max-width: 680px; margin: 30px auto; flex-wrap: wrap; justify-content: center; }
+
+  /* ─── Footer ─── */
+  .footer {
+    padding: 60px 24px; text-align: center; border-top: 1px solid var(--border);
+  }
+  .footer-brand { font-size: 11px; color: var(--dim); letter-spacing: 4px; margin-bottom: 8px; }
+  .footer-ep { font-size: 18px; font-weight: 700; color: var(--teal); letter-spacing: 2px; margin-bottom: 16px; }
+  .footer-links { font-size: 12px; color: var(--dim); }
+  .footer-links a { color: var(--muted); margin: 0 10px; }
+  .footer-copy { font-size: 11px; color: var(--dim); margin-top: 20px; }
+
+  /* ─── Cross-promo ─── */
+  .cross-promo {
+    max-width: 700px; margin: 0 auto 40px; padding: 20px 24px; border-radius: 10px;
+    border: 1px solid #E9456020; background: #E9456006; display: flex; gap: 16px; align-items: center;
+  }
+  .cross-promo-icon { font-size: 28px; color: var(--red); flex-shrink: 0; }
+  .cross-promo-text { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .cross-promo-text strong { color: var(--red); }
+  .cross-promo-text a { color: var(--red); }
+
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+  @media (max-width: 600px) {
+    .safety-grid { grid-template-columns: 1fr; }
+    .hero { padding: 40px 20px; }
+    .section { padding: 50px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-badge">SMART FILE STORAGE FOR PRODUCERS</div>
+  <div class="hero-icon">◆</div>
+  <h1 class="hero-title">SESSIONVAULT</h1>
+  <p class="hero-sub">Your sessions are a mess.<br>SessionVault cleans them up without losing anything.</p>
+  <p class="hero-desc">Auto-archive old sessions, trim backups, find duplicates. Understands Pro Tools, Ableton, and Logic folder structures. Never deletes — only organizes.</p>
+  <a href="#pricing" class="hero-cta">▸ GET SESSIONVAULT</a>
+  <div class="hero-price">Starting at <span>$99/year</span> · macOS · Cancel anytime</div>
+</div>
+
+<!-- ═══ THE PROBLEM ═══ -->
+<div class="section">
+  <div class="section-label">THE PROBLEM</div>
+  <div class="section-title">Every producer has the same story.</div>
+
+  <div class="story">
+    <div class="story-step bad">
+      <div class="story-num">01</div>
+      <div class="story-title">Sessions pile up.</div>
+      <div class="story-desc">New project, new folder. Audio files, bounces, backups, takes. Repeat 200 times over 3 years.</div>
+    </div>
+    <div class="story-step bad">
+      <div class="story-num">02</div>
+      <div class="story-title">Your drive fills up.</div>
+      <div class="story-desc">One day your SSD is at 95%. Pro Tools starts choking. Bounce times triple. Ableton freezes. Your system is screaming.</div>
+    </div>
+    <div class="story-step bad">
+      <div class="story-num">03</div>
+      <div class="story-title">The weekend from hell.</div>
+      <div class="story-desc">You spend an entire weekend manually sorting 2TB of sessions. What's safe to move? What are these bounces? Is this a duplicate? You're terrified of deleting the wrong thing.</div>
+    </div>
+    <div class="story-step good">
+      <div class="story-num">04</div>
+      <div class="story-title">SessionVault fixes this.</div>
+      <div class="story-desc">It understands your DAW sessions. It knows what's safe to clean. It guides you through it step by step. And it never, ever deletes anything.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FEATURES ═══ -->
+<div class="section">
+  <div class="section-label">WHAT IT DOES</div>
+  <div class="section-title">Smart storage that speaks DAW.</div>
+  <div class="section-text">SessionVault isn't a generic disk cleaner. It understands Pro Tools session folders, Ableton project structures, and Logic bundles. It knows what "Audio Files" and "Session File Backups" mean.</div>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon" style="color:var(--teal)">◆</div>
+      <div class="feature-title">Drive Health Dashboard</div>
+      <div class="feature-desc">See storage usage across all your drives. Get a health score (A/B/C/D) and warnings before your drive fills up. Know exactly where your space is going.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="color:var(--yellow)">✂</div>
+      <div class="feature-title">Quick Clean</div>
+      <div class="feature-desc">One-tap presets: trim old backups, remove rendered files your DAW regenerates automatically, flag sessions ready for archiving. Preview everything before confirming.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="color:#8B5CF6">⚙</div>
+      <div class="feature-title">Rules Engine</div>
+      <div class="feature-desc">Set it once, it runs forever. "Archive sessions older than 6 months." "Keep last 3 backups." "Flag anything over 10 GB." SessionVault applies your rules and shows you what to do.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="color:#3B82F6">◇</div>
+      <div class="feature-title">Duplicate Finder</div>
+      <div class="feature-desc">SHA256-verified detection finds identical audio files across all your sessions. The same sample imported into 15 projects? Found. Same bounce with 4 different names? Found.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="color:var(--green)">↩</div>
+      <div class="feature-title">30-Day Undo</div>
+      <div class="feature-desc">Every archive move is logged and reversible for 30 days. Changed your mind? One click and the session goes right back where it was. Full action history.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="color:var(--teal)">▸</div>
+      <div class="feature-title">Guided Cleanup</div>
+      <div class="feature-desc">SessionVault doesn't dump 1,000 files on you. It gives you bite-sized actions: "Clean your top 5 biggest wins." One at a time, at your pace, until your drives are healthy.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DAWS ═══ -->
+<div class="section">
+  <div class="section-label">SUPPORTS YOUR DAW</div>
+  <div class="section-title">Built by a producer. For producers.</div>
+  <div class="section-text">SessionVault understands session folder structures natively. It knows where your audio lives, where bounces go, and what backup files are safe to trim.</div>
+  <div class="daws">
+    <span class="daw-badge pt">Pro Tools</span>
+    <span class="daw-badge ab">Ableton Live</span>
+    <span class="daw-badge lp">Logic Pro</span>
+  </div>
+</div>
+
+<!-- ═══ SAFETY ═══ -->
+<div class="section">
+  <div class="section-label">YOUR SAFETY NET</div>
+  <div class="section-title">SessionVault never deletes anything.</div>
+  <div class="section-text">We know how terrifying it is to clean up sessions. That's why every action has a safety net built in.</div>
+
+  <div class="safety-grid">
+    <div class="safety-item">
+      <div class="safety-icon" style="color:var(--teal)">◆</div>
+      <div class="safety-label">Move, never delete</div>
+      <div class="safety-desc">Sessions are archived to your external drive, not erased</div>
+    </div>
+    <div class="safety-item">
+      <div class="safety-icon" style="color:var(--yellow)">▸</div>
+      <div class="safety-label">Preview first</div>
+      <div class="safety-desc">See exactly what will happen before confirming any action</div>
+    </div>
+    <div class="safety-item">
+      <div class="safety-icon" style="color:var(--green)">↩</div>
+      <div class="safety-label">30-day undo</div>
+      <div class="safety-desc">Every archive move can be reversed with one click</div>
+    </div>
+    <div class="safety-item">
+      <div class="safety-icon" style="color:#3B82F6">●</div>
+      <div class="safety-label">Full history</div>
+      <div class="safety-desc">Every action is logged so you always know what happened</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRICING ═══ -->
+<div class="pricing" id="pricing">
+  <div class="section-label" style="text-align:center">PRICING</div>
+  <div class="section-title" style="text-align:center;max-width:500px;margin:0 auto 8px">Less than a plugin. Saves you a weekend.</div>
+  <div style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto">
+    One disorganized drive costs you hours. SessionVault pays for itself the first time you use it.
+  </div>
+
+  <div class="price-grid">
+    <div class="price-card">
+      <div class="price-tier">SESSIONVAULT</div>
+      <div class="price-amount">$99</div>
+      <div class="price-period">per year · cancel anytime</div>
+      <ul class="price-features">
+        <li>Drive health monitoring</li>
+        <li>Session scanner (PT, Ableton, Logic)</li>
+        <li>Rules engine + Quick Clean</li>
+        <li>SHA256 duplicate finder</li>
+        <li>Archive manager + one-click restore</li>
+        <li>30-day undo on all moves</li>
+        <li>Menu bar background mode</li>
+        <li>All future updates</li>
+      </ul>
+      <a href="https://buy.stripe.com/6oUaEW8tRaN55BV5Sefw401" target="_blank"><button class="price-btn secondary">▸ GET STANDARD — $99/YR</button></a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="price-tag">MOST POPULAR</div>
+      <div class="price-tier">SESSIONVAULT PRO</div>
+      <div class="price-amount">$129</div>
+      <div class="price-period">per year · cancel anytime</div>
+      <ul class="price-features">
+        <li>Everything in Standard</li>
+        <li class="highlight">Daily auto-backup to Dropbox</li>
+        <li class="highlight">Daily auto-backup to Google Drive</li>
+        <li class="highlight">EP Storage integration</li>
+        <li class="highlight">Set it and forget it — runs overnight</li>
+        <li>Priority support</li>
+        <li>All future updates + Pro features</li>
+      </ul>
+      <a href="https://buy.stripe.com/aFa14mfWjg7p3tN3K6fw402" target="_blank"><button class="price-btn">▸ GET PRO — $129/YR</button></a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Cross-promo ═══ -->
+<div class="cross-promo">
+  <div class="cross-promo-icon">▼</div>
+  <div class="cross-promo-text">
+    <strong>Sessions crashing?</strong> <a href="https://crashpilot.app">CrashPilot</a> identifies which plugin crashed your DAW. $49 one-time. Same developer, same retro aesthetic, same trust.
+  </div>
+</div>
+
+<!-- ═══ Footer ═══ -->
+<div class="footer">
+  <div class="footer-brand">PRESENTED BY</div>
+  <div class="footer-ep">EXECUTIVE PRODUCER</div>
+  <div class="footer-links">
+    <a href="https://crashpilot.app">CrashPilot</a>
+    <a href="https://executiveproducer.studio">Executive Producer</a>
+    <a href="mailto:jacob@jacoblutz.com">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Boy Wonder Music · Nashville, TN</div>
+</div>
+
+</body>
+</html>
