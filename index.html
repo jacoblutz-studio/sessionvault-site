@@ -306,7 +306,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 88px;
   height: 88px;
   overflow: visible;
-  animation: wheelSpin 5s linear infinite;
+  animation: wheelSpin 3.8s linear infinite;
   transform-origin: 50% 50%;
   transform-box: view-box;
   will-change: transform;
@@ -847,9 +847,8 @@ h1 {
   12%, 100% { transform: scale(1); opacity:1; }
 }
 @keyframes wheelSpin {
-  0% { transform: rotate(0deg); }
-  82% { transform: rotate(1500deg); }
-  100% { transform: rotate(1440deg); }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 @keyframes boltLock {
   0%, 60% { height: 0; }
@@ -875,6 +874,11 @@ h1 {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+  .vault-rotor,
+  .map-sweep {
+    animation-duration: 3.8s !important;
+    animation-iteration-count: infinite !important;
   }
 }
 
@@ -973,10 +977,10 @@ h1 {
           </div>
         </div>
 
-        <div class="eyebrow"><span class="live-dot"></span> storage safety system for producers</div>
+        <div class="eyebrow"><span class="live-dot"></span> schedule auto-backups for all your work</div>
         <h1>SessionVault</h1>
-        <p class="hero-sub">Scattered sessions, mystery drives, and scary cleanup decisions <span>finally get organized</span>.</p>
-        <p class="hero-note">SessionVault maps your project folders, backs up selected work to one or two locations, keeps the folder structure familiar, and shows calm next steps before anything moves.</p>
+        <p class="hero-sub">Set it once. SessionVault keeps your work backed up <span>automatically</span>.</p>
+        <p class="hero-note">SessionVault maps your project folders, schedules automatic backups to one or two locations, keeps the folder structure familiar, and shows calm next steps before anything moves.</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="https://buy.stripe.com/6oUaEW8tRaN55BV5Sefw401" target="_blank" rel="noopener">Get SessionVault v2 - $99/yr</a>
           <a class="btn btn-secondary" href="#vault">See the vault</a>
