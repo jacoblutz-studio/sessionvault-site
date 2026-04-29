@@ -342,7 +342,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 100%;
   background: linear-gradient(90deg, var(--teal), #a3f56f, var(--yellow));
   transform-origin: left;
-  animation: bootProgress 5s ease-out infinite;
+  animation: bootProgress 5s ease-in-out infinite;
 }
 
 .vault-steps {
@@ -819,7 +819,7 @@ h1 {
 }
 @keyframes bootProgress {
   0% { transform: scaleX(0); }
-  82%, 100% { transform: scaleX(1); }
+  70%, 100% { transform: scaleX(1); }
 }
 @keyframes haloLock {
   0%, 100% { opacity:.45; }
@@ -836,6 +836,10 @@ h1 {
   .vault-rotor,
   .vault-rivets span {
     animation-duration: 3.8s !important;
+    animation-iteration-count: infinite !important;
+  }
+  .vault-progress span {
+    animation-duration: 5s !important;
     animation-iteration-count: infinite !important;
   }
 }
