@@ -28,9 +28,12 @@ module.exports = async (req, res) => {
         try {
           const session = JSON.parse(data);
           if (session.payment_status === 'paid') {
+            const hash = sessionId.slice(-8).toUpperCase();
+            const licenseKey = `SV-${hash}`;
             res.status(200).json({
               valid: true,
-              downloadUrl: process.env.DMG_DOWNLOAD_URL || '/SessionVault.dmg',
+              downloadUrl: '/downloads/sv-33581863a550985154a96454/SessionVault-v2.0.0.dmg',
+              licenseKey: licenseKey,
             });
           } else {
             res.status(200).json({ valid: false, error: 'Payment not completed' });

@@ -68,13 +68,18 @@ async function verify() {
       container.innerHTML = `
         <div class="icon">✓</div>
         <div class="title">YOU'RE IN</div>
-        <div class="subtitle">SessionVault is ready to download. Thank you for your purchase.</div>
+        <div class="subtitle">SessionVault is ready to download.</div>
+        <div style="padding:20px;border-radius:12px;border:1px solid #00D4AA30;background:#00D4AA06;margin-bottom:24px;text-align:center">
+          <div style="font-size:10px;color:#888;letter-spacing:3px;margin-bottom:8px">INSTALL NOTES</div>
+          <div style="font-size:14px;font-weight:800;color:#00D4AA;letter-spacing:1px;margin-bottom:10px">No unlock code needed.</div>
+          <div style="font-size:11px;color:#888;line-height:1.7">Open the DMG, drag SessionVault to Applications, then let the setup scan find your DAW folders.</div>
+        </div>
         <a href="${data.downloadUrl}" class="download-btn">▸ DOWNLOAD SESSIONVAULT</a>
         <div class="steps">
           <div class="step"><span class="step-num">01</span> Open the downloaded .dmg file</div>
           <div class="step"><span class="step-num">02</span> Drag SessionVault to Applications</div>
-          <div class="step"><span class="step-num">03</span> Launch and set up your rules</div>
-          <div class="step"><span class="step-num">04</span> Let SessionVault guide you through cleanup</div>
+          <div class="step"><span class="step-num">03</span> Open SessionVault and scan your drives</div>
+          <div class="step"><span class="step-num">04</span> Pick your backup destination and optional Safety Copy</div>
         </div>
         <div class="note">
           Questions? Email <a href="mailto:jacob@jacoblutz.com" style="color:#00D4AA">jacob@jacoblutz.com</a>
